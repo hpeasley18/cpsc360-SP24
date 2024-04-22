@@ -23,49 +23,84 @@ def drawAxes():                                                             # dr
 
 # For Mini-project 1:
 # TODO: 1) Create a scarecrow as instructed and 2) Constantly rotate head and nose ONLY
-def draw_Scarecrow():                                                  # This is the drawing function drawing all graphics (defined by you)
-    glClearColor(0, 0, 0, 1)                                                # set background RGBA color 
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)                        # clear the buffers initialized in the display mode
+rotation_angle = 0  # Global variable to store rotation angle
 
-    # configure quatratic drawing
+def draw_Scarecrow():
+    global rotation_angle
+
+    rotation_angle += 1
+
+    glClearColor(0, 0, 0, 1)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
     quadratic = gluNewQuadric()
-    gluQuadricDrawStyle(quadratic, GLU_FILL)  
+    gluQuadricDrawStyle(quadratic, GLU_FILL)
 
-    # TODO: Head (sphere: radius=2.5) 
-    glColor3f(0.0, 1.0, 0.0)
-    gluSphere(quadratic, 2.5, 32, 32)
-
-    # TODO: Nose (cylinder: base-radius=0.3, top-radius=0, length=2)
-    glColor3f(1.0, 0.0, 0.0)
-    gluCylinder(quadratic, 0.3, 0.0, 1.8, 32, 32)  
-
-    # TODO: Torso (cylinder: radius=2.5, length=10)
+    # Torso (cylinder: radius=2.5, length=10)
     glColor3f(1.0, 1.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0, 10, 0)  # Move the torso to y=5
+    glRotatef(90, 1, 0, 0)  # Rotate the torso to align along y-axis
     gluCylinder(quadratic, 2.5, 2.5, 10.0, 32, 32)
+    glPopMatrix()
 
-    # TODO: Left Leg (cylinders: radius=1.0, length=12)
+    # Left Leg (cylinders: radius=1.0, length=12)
     glColor3f(1.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(-1.2, 0, 0)  # Move the left leg to x=-1.2
+    glRotatef(90, 1, 0, 0)  # Rotate the left leg to point in -y direction
     gluCylinder(quadratic, 1.0, 1.0, 12.0, 32, 32)
+    glPopMatrix()
 
-    # TODO: Right Leg (cylinders: radius=1.0, length=12)
+    # Right Leg (cylinders: radius=1.0, length=12)
     glColor3f(1.0, 0.0, 0.0)
+    glPushMatrix()
+    glTranslatef(1.2, 0, 0)  # Move the right leg to x=1.2
+    glRotatef(90, 1, 0, 0)  # Rotate the right leg to point in -y direction
     gluCylinder(quadratic, 1.0, 1.0, 12.0, 32, 32)
+    glPopMatrix()
 
-    # TODO: Left Arm (cylinders: radius=1.0, length=10)
+    # Left Arm (cylinders: radius=1.0, length=10)
     glColor3f(0.0, 0.0, 1.0)
+    glPushMatrix()
+    glTranslatef(-1.2, 9, 0)  # Move the left arm to x=-1.2, y=9
+    glRotatef(90, 0, 1, 0)  # Rotate the left arm to point in -y direction
     gluCylinder(quadratic, 1.0, 1.0, 12.0, 32, 32)
+    glPopMatrix()
 
-    # TODO: Right Arm (cylinders: radius=1.0, length=10)
+    # Right Arm (cylinders: radius=1.0, length=10)
     glColor3f(0.0, 0.0, 1.0)
+    glPushMatrix()
+    glTranslatef(1.2, 9, 0)  # Move the right arm to x=1.2, y=9
+    glRotatef(-90, 0, 1, 0)  # Rotate the right arm to point in -y direction
     gluCylinder(quadratic, 1.0, 1.0, 12.0, 32, 32)
+    glPopMatrix()
 
+    # Head (sphere: radius=2.5)
+    glColor3f(0.0, 1.0, 0.0)
+    glPushMatrix()
+    glTranslatef(0, 12.5, 0)  # Move the head to y=12.5
+    glRotatef(rotation_angle, 0, 1, 0)  # Rotate the head around y-axis
+    gluSphere(quadratic, 2.5, 32, 32)
+    glPopMatrix()
+
+    # Nose (cylinder: base-radius=0.3, top-radius=0, length=1.8)
+    glColor3f(1.0, 0.0, 0.0)
+    glPushMatrix()
+    glRotatef(rotation_angle, 0, 1, 0)  # Apply the same rotation as the head
+    glTranslatef(0, 0, 2.5)  # Move the nose to a position 2.5 units in front of the head
+    glTranslatef(0, 12.5, 0)  # Move the nose up to the head's position
+    
+    gluCylinder(quadratic, 0.3, 0.0, 1.8, 32, 32)
+    glPopMatrix()
+    
 def main():
     pygame.init()                                                           # initialize a pygame program
     glutInit()                                                              # initialize glut library 
 
     screen = (width, height)                                                # specify the screen size of the new program window
     display_surface = pygame.display.set_mode(screen, DOUBLEBUF | OPENGL)   # create a display of size 'screen', use double-buffers and OpenGL
-    pygame.display.set_caption('CPSC 360 - YOUR NAME')                      # set title of the program window
+    pygame.display.set_caption('CPSC 360 - Hunter Peasley')                      # set title of the program window
 
     glEnable(GL_DEPTH_TEST)
     glMatrixMode(GL_PROJECTION)                                             # set mode to projection transformation
