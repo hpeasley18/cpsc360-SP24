@@ -95,15 +95,21 @@ def drawRotationAxis():
 # For Assignment 5: Complete the two functions below
 # Q1:
 def spinningTransform():
-    #TODO: Write your code below and call the function in main()
+    
+    # Define the rotation angle
+    angle = 1.0
 
-    return
+    # Apply rotation around the y-axis passing through the cube's center
+    glTranslatef(14.0, 0.0, 14.0)  # Translate to the center of the cube
+    glRotatef(angle, 0.0, 1.0, 0.0)  # Rotate around the y-axis
+    glTranslatef(-14.0, 0.0, -14.0)  # Translate back to original position
 
 # Q2:
 def scaleByHalf():
-    #TODO: Write your code below and call the function in main()
 
-    return
+    # Apply scaling transformation to scale the cube uniformly by half
+    glScalef(0.5, 0.5, 0.5)
+    
 
 def main():
     pygame.init()                                                           # initialize a pygame program
@@ -111,7 +117,7 @@ def main():
 
     screen = (width, height)                                                # specify the screen size of the new program window
     display_surface = pygame.display.set_mode(screen, DOUBLEBUF | OPENGL)   # create a display of size 'screen', use double-buffers and OpenGL
-    pygame.display.set_caption('CPSC 360 - YOUR NAME')                      # set title of the program window
+    pygame.display.set_caption('CPSC 360 - Hunter Peasley')                      # set title of the program window
 
     glEnable(GL_DEPTH_TEST)
     glMatrixMode(GL_PROJECTION)                                             # set mode to projection transformation
@@ -121,13 +127,16 @@ def main():
     glMatrixMode(GL_MODELVIEW)                                              # set mode to modelview (geometric + view transf)
     gluLookAt(0, 0, 50, 0, 0, -1, 0, 1, 0)
     initmodelMatrix = glGetFloat(GL_MODELVIEW_MATRIX)
+    scaleByHalf()
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-
+        
+        
         draw() # function to draw the object
+        spinningTransform()
 
         # below are the code irrelevant to the assignment
         glPushMatrix()
@@ -137,5 +146,7 @@ def main():
         glPopMatrix()
         pygame.display.flip()
         pygame.time.wait(10)
-
+        
+        
+    
 main()
